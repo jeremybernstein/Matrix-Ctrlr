@@ -66,7 +66,9 @@ void Boot(void)
 
   if (MIDITHRU_OFF_BOOT)
   {
+    MIDI3.setThruFilterMode(midi::Thru::Mode::Off); // disable MIDI Thru on CORE OUT
     MIDI3.turnThruOff(); // disable MIDI Thru on CORE OUT
+    MIDI1.setThruFilterMode(midi::Thru::Mode::Off); // disable MIDI Thru on Matrix A
     MIDI1.turnThruOff(); // disable MIDI Thru on Matrix A
   }
   delay(300);
