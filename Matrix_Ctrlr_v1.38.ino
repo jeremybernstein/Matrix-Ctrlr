@@ -56,7 +56,7 @@
 #include "softpanel.h"
 #include "oner.h"
 
-#define firmware "1.38 "
+#define firmware "1.39j "
 
 // http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1208715493/11
 #define FASTADC 0 // à essayer à 1 plus tard quand les ain non utilisés seront reliés à la masse
@@ -116,7 +116,14 @@ const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 // LCD display defines
 #define  LCD_ROWS  2
 #define  LCD_COLS  20
+
+#define  LCD_FAST  1 // enable for fast-lcd hw mod
+
+#if LCD_FAST
+hd44780_pinIO lcd(44, 46, 45, 40, 43, 41, 42);
+#else
 hd44780_pinIO lcd(44, 45, 40, 43, 41, 42); // lcd(RS, Enable, D4, D5, D6, D7) julien proto arduino (ne marche pas en 47/48) ... pour les 2 premieres entrées A4 A5 ok
+#endif
 #define HD44780_LCDOBJECT
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -364,7 +371,7 @@ void setup()
 ////////////////////////////////////////////////////////////////////////////////////////////
 // LOOPS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 ////////////////////////////////////////////////////////////////////////////////////////////
-void loop() 
+void loop()
 {
 
 #if DEBUG_looptime

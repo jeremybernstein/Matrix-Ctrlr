@@ -387,7 +387,7 @@ void MIDI_SendVoiceParam(unsigned char interface, unsigned char param, unsigned 
     // It is always active, even in poly mode.
     // Values around 2-6 add a slow VCO-like detune that helps liven up the sound and keeps poly mode sounding in tune.
     // http://gliglisynth.blogspot.fr/2014/11/matrix-1000-rom-only-upgrade-v116.html
-    
+
     // UNISON DETUNE :
     if (param == SX_UNISON_DETUNE)
     {
@@ -453,7 +453,7 @@ void MIDI_SendVoiceParam(unsigned char interface, unsigned char param, unsigned 
                      || Translate_SX_CC(param) == 0 // or bank select MSB
                      || Translate_SX_CC(param) == 32 // or bank select LSB
                      || Translate_SX_CC(param) == 64 // or sustain (pedal2)
-                     // || Translate_SX_CC(param) == SX_UNISON_DETUNE // Unison detune, MIDI CC #94 (Celeste Level) 
+                     // || Translate_SX_CC(param) == SX_UNISON_DETUNE // Unison detune, MIDI CC #94 (Celeste Level)
                      || Translate_SX_CC(param) == 96 // or increment
                      || Translate_SX_CC(param) == 97 // or decrement
                      || Translate_SX_CC(param) == 98 // or non reg parm LSB
@@ -522,7 +522,7 @@ void MIDI_HandleDelayedVoiceParam(unsigned char interface, bool midiThru)
 
   if (!param_in_queue)
     return;
-    
+
 #if DEBUG_midi
   Serial.print(F("MIDI_HandleMatrixModTransmitDelay()/")); Serial.print (F(" interface = ")); Serial.println(interface, HEX);
 #endif
