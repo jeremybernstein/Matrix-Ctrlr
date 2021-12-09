@@ -305,7 +305,7 @@ void LivePanel_BlinkLEDs(void)
   }
 
 //  --> managed in the interrupt now (fw 1.12)
-// // external trigger TR707 
+// // external trigger TR707
 //  if (trigger && (systmClock == TRGCLK))
 //  {
 //    DOUT_PinSet(DOUT_ACTIVITY2, DIN_STATE_ON);

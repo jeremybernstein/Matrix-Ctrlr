@@ -31,10 +31,9 @@ void Boot(void)
   // stabilise analog inputs
   filter_ratio = EEPROM.read(EEPROM_FILTER_RATIO);
   delayMicroseconds (50);
-  for (unsigned char k = 0; k < 128; k++)
-    ReadAnalog();
-  for (unsigned char k = 0; k < 32; k++)
-    ReadDigital();
+
+  InitAnalog();
+  InitDigital();
 
   /////////////////////// check formatting ////////////////////////
 
