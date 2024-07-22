@@ -305,7 +305,7 @@ void LivePanel_BlinkLEDs(void)
   }
 
 //  --> managed in the interrupt now (fw 1.12)
-// // external trigger TR707
+// // external trigger TR707 
 //  if (trigger && (systmClock == TRGCLK))
 //  {
 //    DOUT_PinSet(DOUT_ACTIVITY2, DIN_STATE_ON);
@@ -695,7 +695,7 @@ void LivePanel_Init()
   transmit_counter    = 0;
   is_transmit_delayed = 0;
 
-#if DEBUG_analog
+#if DEBUG_adc
   Serial.println(F("LivePanel_Init()")); Serial.println();
 #endif
 }

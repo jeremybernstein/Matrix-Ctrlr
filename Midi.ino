@@ -65,7 +65,7 @@ void MIDI_SendPatchProgram(unsigned char interface, unsigned char program)
       break;
 
     case INTERFACE_SERIAL3:
-      MIDI3.sendProgramChange(program, MIDI_CHANNEL + device - Matrix_Device_A);
+      MIDI3.sendProgramChange(program, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
       break;
 
 #if SOFTSERIAL_ENABLED
@@ -112,9 +112,9 @@ void MIDI_SendPatchNumber(unsigned char interface, unsigned char bank, unsigned 
       break;
 
     case INTERFACE_SERIAL3:
-      MIDI3.sendControlChange (0x00, bank, MIDI_CHANNEL + device - Matrix_Device_A);
-      MIDI3.sendControlChange (0x20, 0, MIDI_CHANNEL + device - Matrix_Device_A);
-      MIDI3.sendProgramChange(program, MIDI_CHANNEL + device - Matrix_Device_A);
+      MIDI3.sendControlChange (0x00, bank, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
+      MIDI3.sendControlChange (0x20, 0, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
+      MIDI3.sendProgramChange(program, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
       break;
 
 #if SOFTSERIAL_ENABLED
@@ -361,11 +361,11 @@ void MIDI_SendVoiceParam(unsigned char interface, unsigned char param, unsigned 
     //    //update_EditBuffer(device, param, value);
     //    switch (interface)
     //    {
-    //      case  INTERFACE_SERIAL1: update_EditBuffer(Matrix_Device_A, param, value); break;
-    //      case  INTERFACE_SERIAL2: update_EditBuffer(Matrix_Device_B, param, value); break;
+    //      case  INTERFACE_SERIAL1: update_EditBuffer(MATRIX_DEVICE_A, param, value); break;
+    //      case  INTERFACE_SERIAL2: update_EditBuffer(MATRIX_DEVICE_B, param, value); break;
     #if SOFTSERIAL_ENABLED
-    //      case  INTERFACE_SERIAL4: update_EditBuffer(Matrix_Device_C, param, value); break;
-    //      case  INTERFACE_SERIAL5: update_EditBuffer(Matrix_Device_D, param, value); break;
+    //      case  INTERFACE_SERIAL4: update_EditBuffer(MATRIX_DEVICE_C, param, value); break;
+    //      case  INTERFACE_SERIAL5: update_EditBuffer(MATRIX_DEVICE_D, param, value); break;
     #endif
     //      default: break;
     //    }
@@ -387,7 +387,7 @@ void MIDI_SendVoiceParam(unsigned char interface, unsigned char param, unsigned 
     // It is always active, even in poly mode.
     // Values around 2-6 add a slow VCO-like detune that helps liven up the sound and keeps poly mode sounding in tune.
     // http://gliglisynth.blogspot.fr/2014/11/matrix-1000-rom-only-upgrade-v116.html
-
+    
     // UNISON DETUNE :
     if (param == SX_UNISON_DETUNE)
     {
@@ -453,7 +453,7 @@ void MIDI_SendVoiceParam(unsigned char interface, unsigned char param, unsigned 
                      || Translate_SX_CC(param) == 0 // or bank select MSB
                      || Translate_SX_CC(param) == 32 // or bank select LSB
                      || Translate_SX_CC(param) == 64 // or sustain (pedal2)
-                     // || Translate_SX_CC(param) == SX_UNISON_DETUNE // Unison detune, MIDI CC #94 (Celeste Level)
+                     // || Translate_SX_CC(param) == SX_UNISON_DETUNE // Unison detune, MIDI CC #94 (Celeste Level) 
                      || Translate_SX_CC(param) == 96 // or increment
                      || Translate_SX_CC(param) == 97 // or decrement
                      || Translate_SX_CC(param) == 98 // or non reg parm LSB
@@ -522,7 +522,7 @@ void MIDI_HandleDelayedVoiceParam(unsigned char interface, bool midiThru)
 
   if (!param_in_queue)
     return;
-
+    
 #if DEBUG_midi
   Serial.print(F("MIDI_HandleMatrixModTransmitDelay()/")); Serial.print (F(" interface = ")); Serial.println(interface, HEX);
 #endif
@@ -533,23 +533,23 @@ void MIDI_HandleDelayedVoiceParam(unsigned char interface, bool midiThru)
     {
       case  INTERFACE_SERIAL1:
         MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-        update_EditBuffer(Matrix_Device_A, last_delayed_enc_param, last_delayed_enc_value);
+        update_EditBuffer(MATRIX_DEVICE_A, last_delayed_enc_param, last_delayed_enc_value);
         break;
 
       case INTERFACE_SERIAL2:
         MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-        update_EditBuffer(Matrix_Device_B, last_delayed_enc_param, last_delayed_enc_value);
+        update_EditBuffer(MATRIX_DEVICE_B, last_delayed_enc_param, last_delayed_enc_value);
         break;
 
 #if SOFTSERIAL_ENABLED
       case INTERFACE_SERIAL4:
         MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-        update_EditBuffer(Matrix_Device_C, last_delayed_enc_param, last_delayed_enc_value);
+        update_EditBuffer(MATRIX_DEVICE_C, last_delayed_enc_param, last_delayed_enc_value);
         break;
 
       case INTERFACE_SERIAL5:
         MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-        update_EditBuffer(Matrix_Device_D, last_delayed_enc_param, last_delayed_enc_value);
+        update_EditBuffer(MATRIX_DEVICE_D, last_delayed_enc_param, last_delayed_enc_value);
         break;
 #endif
 
@@ -605,7 +605,7 @@ void MIDI_HandleMatrixModTransmitDelay(unsigned char interface)
 
   if (encoder_send_counter > 300)   // delay about a 3rd second : 5120
   {
-    if (matrix_modele == matrix_6)
+    if (matrix_modele == MATRIX_6)
     {
       // MIDI_EnterRemoteEditMode(interface);
       SendEditBuffer(device, interface); // BUG of M6 : can't handle those sysex modmatrix messages :( #hack

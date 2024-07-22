@@ -56,7 +56,7 @@
 #include "softpanel.h"
 #include "oner.h"
 
-#define firmware "1.39j "
+#define firmware "1.42j "
 
 // http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1208715493/11
 #define FASTADC 0 // à essayer à 1 plus tard quand les ain non utilisés seront reliés à la masse
@@ -77,7 +77,7 @@ const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 // used to debug various stuff :
 #define DEBUG 0
 #define DEBUG_looptime 0
-#define DEBUG_analog   0
+#define DEBUG_adc   0
 #define DEBUG_SRIO    0
 #define DEBUG_din      0
 #define DEBUG_dout     0
@@ -110,7 +110,7 @@ const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 #define DEBUG_factory 0
 #define DEBUG_wizz 0
 #define DEBUG_uEB 0
-
+#define DEBUG_CHORDM 1
 
 
 // LCD display defines
@@ -373,7 +373,7 @@ void setup()
 ////////////////////////////////////////////////////////////////////////////////////////////
 void loop()
 {
-
+//Serial.println(F("loop"));
 #if DEBUG_looptime
   long looptime, looptime1;
   looptime = looptime1 = micros();
@@ -437,6 +437,7 @@ void loop()
   InitFlag = 0;
   booting = 0;
 
+  
 #if DEBUG_looptime
   looptime1 = micros();
   Serial.print (F("looptime (usec) : "));

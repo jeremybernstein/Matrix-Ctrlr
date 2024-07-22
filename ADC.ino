@@ -101,7 +101,7 @@ void AIN_NotifyChange()
           if (inTest)
           {
             // test mode
-#if DEBUG_analog
+#if DEBUG_adc
             Serial.print(F("ain_pin : ")); Serial.print(i);
             Serial.print(F(" / ain_pin_value : ")); Serial.println(Analog_Mapped[i]);
 #endif
@@ -123,7 +123,7 @@ void AIN_NotifyChange()
           {
             RefreshSoftPanel = 1;
 
-#if DEBUG_analog
+#if DEBUG_adc
             // print something like : A0-### value
             Serial.print(F("AIN_NotifyChange()")); Serial.print(F("ain_pin = ")); Serial.print(ain_pin); Serial.print(F(", ain_pin_value = ")); Serial.println(ain_pin_value);
 #endif
@@ -131,7 +131,7 @@ void AIN_NotifyChange()
             if (ain_pin == 11)
               LivePanel_HandleAin(ain_pin, 127 - ain_pin_value); // le bouton DCO MIX tourne dans le mauvais sens
             else
-              LivePanel_HandleAin(ain_pin, ain_pin_value);
+              LivePanel_HandleAin(ain_pin, ain_pin_value); 
           }
         }
         Previous_Analog[i] = Analog[i]; //reset current value
