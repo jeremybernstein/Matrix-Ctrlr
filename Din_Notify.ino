@@ -15,6 +15,17 @@ static byte din_pin_value;
 ///////////////////////////////////////////////////////////
 // lecture des tact switch (digital)
 ///////////////////////////////////////////////////////////
+
+void InitDigital(void)
+{
+  butt = 0;
+
+  for (unsigned char i = 0; i < NBR_BUTTON; i++) {
+    ReadDigital();
+    old_button_state[i] = button_state[i]; // button state
+  }
+}
+
 void ReadDigital(void)
 {
   //  static unsigned char butt;

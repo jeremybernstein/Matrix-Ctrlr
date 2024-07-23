@@ -56,11 +56,9 @@ void Boot(void)
   localControl = EEPROM.read(EEPROM_LOCAL_CONTROL);
 
   delayMicroseconds (50);
-  for (unsigned char k = 0; k < 128; k++)
-    ReadAnalog();
-  for (unsigned char k = 0; k < 32; k++)
-    ReadDigital();
-
+  InitAnalog();
+  InitDigital();
+  
   // check 24LC512 as blank or formatted before previously
   if (Check_ExtEEPROM_Format(0) || Check_ExtEEPROM_Format(2))
     FORMAT_Memory(3);
@@ -70,7 +68,9 @@ void Boot(void)
 
   if (MIDITHRU_OFF_BOOT)
   {
+    MIDI3.setThruFilterMode(midi::Thru::Mode::Off); // disable MIDI Thru on CORE OUT
     MIDI3.turnThruOff(); // disable MIDI Thru on CORE OUT
+    MIDI1.setThruFilterMode(midi::Thru::Mode::Off); // disable MIDI Thru on Matrix A
     MIDI1.turnThruOff(); // disable MIDI Thru on Matrix A
   }
   delay(300);

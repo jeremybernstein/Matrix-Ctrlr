@@ -1,5 +1,6 @@
 #include "ui_arp.h"
 #include "ui_cfg.h"
+#include "ui_matrix.h"
 #include "arp.h"
 #include "seq.h"
 #include "oner.h"
@@ -459,7 +460,7 @@ void HandleControlChange(byte channel, byte controlNumber, byte value)
     switch (controlNumber)
     {
       case 0:           // bank select
-      case 31:          // bank change
+      case 32:          // bank change
         if (value < 10) // limits to 9 banks
         {
           uBank[device] = value;
@@ -884,18 +885,29 @@ unsigned int HandleReceivedSysEx(byte *sysex, unsigned int length)
     switch (length)
     {
       case 7:
-        // MIDI_RequestMastersParameters
-        if (sysex[3] == 0x04 && sysex[4] == 0x03)
+        if (sysex[3] == 0x04)
         {
-          // requete sur Ctrlr + envoi Core out
-          SendGlobalParameters(INTERFACE_SERIAL3);
-        }
-
-        // MIDI_RequestEditBuffer
-        if (sysex[3] == 0x04 && sysex[4] == 0x04)
-        {
-          // requete sur Ctrlr + envoi core out
-          SendEditBuffer( device, INTERFACE_SERIAL3);
+          if (sysex[4] == 0x03) // MIDI_RequestMastersParameters
+          {
+            // requete sur Ctrlr + envoi Core out
+            SendGlobalParameters(INTERFACE_SERIAL3);
+          }
+          else if (sysex[4] == 0x04) // MIDI_RequestEditBuffer
+          {
+            // requete sur Ctrlr + envoi core out
+            SendEditBuffer( device, INTERFACE_SERIAL3);
+          }
+          // else if (sysex[4] == 0x00)
+          // {
+          //   DumpCtrlrBank(INTERFACE_SERIAL3, uBank[device], false);
+          //   // dump 50 empty splits
+          //   // dump master params
+          // }
+          else if (sysex[4] == 0x01)
+          {
+            PATCH_Load(uBank[device], sysex[5]);
+            SendSinglePatchData(INTERFACE_SERIAL3, sysex[5]);
+          }
         }
         // parameter sysex
         if (sysex[3] = 0x06)
@@ -1152,8 +1164,16 @@ unsigned int HandleReceivedSysEx(byte *sysex, unsigned int length)
           SR.Led_Pin_Write(DOUT_EDIT, 0);
           return 6;
         }
-        else
+        else {
+          if (sysex[3] == 0x0b) { // Mod Matrix syx
+            EditBuffer[device][EB_MmodMap[sysex[4]].Source] = sysex[5];
+            EditBuffer[device][EB_MmodMap[sysex[4]].Destination] = sysex[7];
+            EditBuffer[device][EB_MmodMap[sysex[4]].Amount] = sysex[6];
+            MIDI_SendMatrixModParam(sysex[4], sysex[5], sysex[7], sysex[6]);
+            app_flags.Display_DIN_Req = 1; // force redraw on next tick
+          }
           return sysex[3];
+        }
         break;
 
       case 52:                // SystemCfg

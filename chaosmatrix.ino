@@ -1462,7 +1462,7 @@ void SendGlobalParameters(unsigned char interface)
 //////////////////////////////////////////////////////////
 // Dump Ctrlr Bank to selected interface & to Core OUT
 //////////////////////////////////////////////////////////
-void DumpCtrlrBank(unsigned char interface, unsigned char bank)
+void DumpCtrlrBank(unsigned char interface, unsigned char bank, bool additional)
 {
   unsigned char tmp = systmClock;
   systmClock = MIDCLK; // desactive 0xF8 clock message on serial port
@@ -1498,8 +1498,11 @@ void DumpCtrlrBank(unsigned char interface, unsigned char bank)
         break;
     }
 
-    SendSingleArpData(interface, k);
-    SendSingleUnison(interface, k);
+    if (additional)
+    {
+      SendSingleArpData(interface, k); // these will crash a Matrix-1000 and require a factory reset
+      SendSingleUnison(interface, k);
+    }
     SendSinglePatchData(interface, k); // algo + send via interface
 
   }

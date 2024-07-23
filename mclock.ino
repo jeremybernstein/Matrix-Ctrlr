@@ -28,10 +28,10 @@ void mClockInit()
   send_stop = true;
   send_tick = false;
   // Set the callback function for the clock output to send MIDI Sync message.
-  uClock.setClock96PPQNOutput(ClockOut96PPQN);
+  uClock.setOnPPQN(ClockOut96PPQN);
   // Set the callback function for MIDI Start and Stop messages.
-  uClock.setOnClockStartOutput(onClockStart);
-  uClock.setOnClockStopOutput(onClockStop);
+  uClock.setOnClockStart(onClockStart);
+  uClock.setOnClockStop(onClockStop);
   // Set the clock BPM to 126 BPM
   uClock.setTempo(bpm);
 

@@ -1071,8 +1071,8 @@ void UI_Handle_Cfg()
 
       case SOFT_EDIT_1: // l
         // dump bank selected in Patch to CORE OUT & selected device
-        DumpCtrlrBank(INTERFACE_SERIAL3, uBank[device]);
-        DumpCtrlrBank(INTERFACE_SERIAL, uBank[device]);
+        DumpCtrlrBank(INTERFACE_SERIAL3, uBank[device], true);
+        DumpCtrlrBank(INTERFACE_SERIAL, uBank[device], false);
         break;
 
       case SOFT_EDIT_2: // bank dump
@@ -1095,7 +1095,7 @@ void UI_Handle_Cfg()
           // specify bank (in sysex) first:
           MIDI_SetBank(INTERFACE_SERIAL3, i);
           // then dump 100 patches on core out
-          DumpCtrlrBank(INTERFACE_SERIAL3, i);
+          DumpCtrlrBank(INTERFACE_SERIAL3, i, true);
         }
         // ends with Globals
         SendGlobalParameters(INTERFACE_SERIAL3);

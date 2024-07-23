@@ -21,7 +21,30 @@ unsigned int filter_ratio; // = 1 to 9 value, filtering digital noise from PSU b
 ///////////////////////////////////////////////////////////
 // lecture des potards - scanner
 ///////////////////////////////////////////////////////////
+
+void InitAnalog()
+{
+  for (unsigned char i = 0; i < 8; i++) // 8 groups of 4
+    ReadAnalogUnfiltered();
+
+  for (unsigned char i = 0; i < NBR_POT; i++) {
+    Previous_Analog[i] = Analog[i];
+    Analog_Mapped[i] = (Analog[i] >> 3);
+    Previous_Analog_Mapped[i] = Analog_Mapped[i];
+  }
+}
+
+void ReadAnalogUnfiltered()
+{
+  ReadAnalog_Impl(true);
+}
+
 void ReadAnalog()
+{
+  ReadAnalog_Impl(false);
+}
+
+void ReadAnalog_Impl(bool unfiltered)
 {
   //  static byte AnaIndex[NBR_POT] = {
   //    0, 1, 2, 3, 4, 5, 6, 7,
@@ -36,14 +59,28 @@ void ReadAnalog()
   //__asm__("nop\n\t");
   delayMicroseconds (20);
 
-  // we read pots 8 by 4 on each loop ;)
-  Analog[i]       = (Analog[i] * (10 - filter_ratio) + analogRead(A0) * filter_ratio) / 10; // nouveauté 1.10c : digital noise filtering !!
-  Analog[i + 8]   = (Analog[i + 8] * (10 - filter_ratio) + analogRead(A1) * filter_ratio) / 10; // (c) soundforce.nl -> EMA filtering (exponential mean average)
-  Analog[i + 16]  = (Analog[i + 16] * (10 - filter_ratio) + analogRead(A2) * filter_ratio) / 10; // https://www.norwegiancreations.com/2015/10/tutorial-potentiometers-with-arduino-and-filtering/
-  Analog[i + 24]  = (Analog[i + 24] * (10 - filter_ratio) + analogRead(A3) * filter_ratio) / 10; // https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
+  unsigned int a0 = analogRead(A0);
+  unsigned int a8 = analogRead(A1);
+  unsigned int a16 = analogRead(A2);
+  unsigned int a24 = analogRead(A3);
+
+  if (unfiltered) {
+    Analog[i] = a0;
+    Analog[i + 8] = a8;
+    Analog[i + 16] = a16;
+    Analog[i + 24] = a24;
+  }
+  else {
+    // we read pots 8 by 4 on each loop ;)
+    Analog[i]       = (Analog[i] * (10 - filter_ratio) + a0 * filter_ratio) / 10; // nouveauté 1.10c : digital noise filtering !!
+    Analog[i + 8]   = (Analog[i + 8] * (10 - filter_ratio) + a8 * filter_ratio) / 10; // (c) soundforce.nl -> EMA filtering (exponential mean average)
+    Analog[i + 16]  = (Analog[i + 16] * (10 - filter_ratio) + a16 * filter_ratio) / 10; // https://www.norwegiancreations.com/2015/10/tutorial-potentiometers-with-arduino-and-filtering/
+    Analog[i + 24]  = (Analog[i + 24] * (10 - filter_ratio) + a24 * filter_ratio) / 10; // https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
+  }
+
   //__asm__("nop\n\t");
   ++i;
-  if (i >= 8) { 
+  if (i >= 8) {
     i = 0;
   }
 }
