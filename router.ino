@@ -434,7 +434,7 @@ void HandleControlChange(byte channel, byte controlNumber, byte value)
     switch (controlNumber)
     {
       case 0:           // bank select
-      case 31:          // bank change
+      case 32:          // bank change
         if (value < 10) // limits to 9 banks
         {
           uBank[device] = value;
